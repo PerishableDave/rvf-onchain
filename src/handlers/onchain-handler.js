@@ -11,9 +11,9 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
     const data = await exchangeNetFlowVolume()
 
     const values = data.map((row) => {return row.v})
-    const twentyDaySMA = values.slice(values.length - 20, values.length - 1)
-    const fiftyDaySMA = values.slice(values.length - 50, values.length - 1)
-    const twohundredDaySMA = values.slice(values.length - 200, values.length - 1)
+    const twentyDaySMA = SMA.calculate({ period: 20, values: values.slice(values.length - 20, values.length - 1) })[0]
+    const fiftyDaySMA = SMA.calculate({ period: 50, values: values.slice(values.length - 50, values.length - 1) })[0]
+    const twohundredDaySMA = SMA.calculate({ period: 200, values: values.slice(values.length - 200, values.length - 1)})[0]
     const today = values[values.length - 1]
 
     const result = await client.chat.postMessage({
