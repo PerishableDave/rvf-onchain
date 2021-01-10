@@ -11,7 +11,7 @@ export const exchangeFlow = async (payload) => {
 
     const data = await exchangeNetFlowVolume()
 
-    const values = data.map((row) => {return point.v})
+    const values = data.map((row) => {return row.v})
     const twentyDaySMA = values.slice(values.length - 20, values.length - 1)
     const fiftyDaySMA = values.slice(values.length - 50, values.length - 1)
     const twohundredDaySMA = values.slice(values.length - 200, values.length - 1)
