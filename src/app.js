@@ -13,7 +13,6 @@ const app = new bolt.App({
 app.command('/onchain', exchangeFlow)
 
 ;(async () => {
-  const result = await exchangeNetFlowVolume()
   await app.start(process.env.PORT || 3000)
 
   console.log('⚡️ Bolt app is running!')
