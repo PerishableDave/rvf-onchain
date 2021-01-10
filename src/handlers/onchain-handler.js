@@ -12,9 +12,9 @@ export const exchangeFlow = async (payload) => {
     const data = await exchangeNetFlowVolume()
 
     const values = data.map((row) => {return point.v})
-    const twentyDaySMA = values.slice(values.length - 21, values.length - 1)
-    const fiftyDaySMA = values.slice(values.length - 51, values.length - 1)
-    const twohundredDaySMA = values.slice(values.length - 201, values.length - 1)
+    const twentyDaySMA = values.slice(values.length - 20, values.length - 1)
+    const fiftyDaySMA = values.slice(values.length - 50, values.length - 1)
+    const twohundredDaySMA = values.slice(values.length - 200, values.length - 1)
     const today = values[values.length - 1]
 
     const result = await client.chat.postMessage({
