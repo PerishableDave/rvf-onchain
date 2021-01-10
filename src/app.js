@@ -10,7 +10,7 @@ const app = new bolt.App({
   token: process.env.SLACK_BOT_TOKEN,
 })
 
-app.command('/onchain nfv', exchangeFlow)
+app.command('/onchain', exchangeFlow)
 
 ;(async () => {
   await app.start(process.env.PORT || 3000)
