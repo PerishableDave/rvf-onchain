@@ -3,8 +3,7 @@ import technicalindicators from 'technicalindicators'
 
 const { SMA } = technicalindicators
 
-export const exchangeFlow = async (payload) => {
-  const { shortcut, ack, context, client } = payload
+export const exchangeFlow = async ({ ack, client, payload, context }) => {
 
   try {
     await ack()
