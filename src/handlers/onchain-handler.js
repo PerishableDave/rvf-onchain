@@ -4,7 +4,7 @@ import technicalindicators from 'technicalindicators'
 const { SMA } = technicalindicators
 
 export const exchangeFlow = async (payload) => {
-  const { shortcut, ack, respond } = payload
+  const { shortcut, ack, context, client } = payload
 
   try {
     await ack()
@@ -17,7 +17,9 @@ export const exchangeFlow = async (payload) => {
     const twohundredDaySMA = values.slice(values.length - 201, values.length - 1)
     const today = values[values.length - 1]
 
-    respond({
+    const result = await client.chat.postMessage({
+      token: context.botToken,
+      channel: payload.channel_id,
       blocks: [
         {
           type: "section",
@@ -46,6 +48,7 @@ export const exchangeFlow = async (payload) => {
         }
       ]
     })
+    console.log(result)
   } catch (e) {
     console.error(e)
   }
