@@ -18,9 +18,9 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
 
     const puellData = await puellMultiple()
 
-    const puellValues = data.map((row) => { return row.v })
-    const puellTwentyDaySMA = SMA.calculate({period: 20, values: values.slice(values.length - 20, values.length)})[0]
-    const puellToday = values[values.length - 1]
+    const puellValues = puellData.map((row) => { return row.v })
+    const puellTwentyDaySMA = SMA.calculate({period: 20, values: puellValues.slice(puellValues.length - 20, puellValues.length)})[0]
+    const puellToday = puellValues[puellValues.length - 1]
 
     const result = await client.chat.postMessage({
       token: context.botToken,
