@@ -16,3 +16,15 @@ export const exchangeNetFlowVolume = async (opts = {}) => {
 
   return response.json()
 }
+
+export const puellMultiple = async (opts = {}) => {
+  let params = {
+    a: 'BTC',
+    api_key: process.env.GLASSNODE_API_KEY
+  }
+
+  const url = BASE_URL + '/indicators/puell_multiple?' + querystring.stringify(params)
+  const response = await fetch(url)
+
+  return response.json()
+}
