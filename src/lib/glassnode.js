@@ -28,3 +28,17 @@ export const puellMultiple = async (opts = {}) => {
 
   return response.json()
 }
+
+// MVRV Z-Score
+export const marketToRealizedValue = async () => {
+  let params = {
+    a: 'BTC',
+    api_key: process.env.GLASSNODE_API_KEY
+  }
+
+  const url = BASE_URL + '/market/mvrv_z_score?' + querystring.stringify(params)
+  const response = await fetch(url)
+
+  return response.json()
+
+}

@@ -1,4 +1,4 @@
-import { exchangeNetFlowVolume, puellMultiple } from '../lib/glassnode.js'
+import { exchangeNetFlowVolume, puellMultiple, marketToRealizedValue } from '../lib/glassnode.js'
 import technicalindicators from 'technicalindicators'
 
 const { SMA } = technicalindicators
@@ -21,6 +21,11 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
     const puellValues = puellData.map((row) => { return row.v })
     const puellTwentyDaySMA = SMA.calculate({period: 20, values: puellValues.slice(puellValues.length - 20, puellValues.length)})[0]
     const puellToday = puellValues[puellValues.length - 1]
+
+    const mvrvData = await marketToRealizedValue()
+    const mvrvValues = mvrvData.map((row) => {return row.v})
+    const mvrvTwentyDay = SMA.calculate({period: 20, values: mvrvValues.slice(mvrvValues.length - 20, mvrvValues.length)})[0]
+    const mvrvToday = mvrvValues[mvrvValues.length - 1]
 
     const result = await client.chat.postMessage({
       token: context.botToken,
@@ -67,6 +72,25 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
             },{
               type: "mrkdwn",
               text: `*20 SMA*\n${puellTwentyDaySMA}`
+            }
+          ]
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "*MVRV Z-Score*\nNote: > 8 sell signal."
+          }
+        },
+        {
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: `*Today*\n${mvrvToday}`
+            },{
+              type: "mrkdwn",
+              text: `*20 SMA*\n${mvrvTwentyDay}`
             }
           ]
         }
