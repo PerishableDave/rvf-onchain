@@ -22,13 +22,13 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
 
     const puellData = await puellMultiple()
 
-    const puellDate = format(fromUnixTime(puellData[data.length - 1].t), 'PPP')
+    const puellDate = format(fromUnixTime(puellData[puellData.length - 1].t), 'PPP')
     const puellValues = puellData.map((row) => { return row.v })
     const puellTwentyDaySMA = trunc(SMA.calculate({period: 20, values: puellValues.slice(puellValues.length - 20, puellValues.length)})[0])
     const puellToday = trunc(puellValues[puellValues.length - 1])
 
     const mvrvData = await marketToRealizedValue()
-    const mvrvDate = format(fromUnixTime(data[Date.length - 1].t), 'PPP')
+    const mvrvDate = format(fromUnixTime(mvrvData[mvrvData.length - 1].t), 'PPP')
     const mvrvValues = mvrvData.map((row) => {return row.v})
     const mvrvTwentyDay = trunc(SMA.calculate({period: 20, values: mvrvValues.slice(mvrvValues.length - 20, mvrvValues.length)})[0])
     const mvrvToday = trunc(mvrvValues[mvrvValues.length - 1])
