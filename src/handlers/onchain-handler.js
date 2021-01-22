@@ -94,6 +94,22 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
               text: `*20 SMA*\n${mvrvTwentyDay}`
             }
           ]
+        },
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: "Sahil Indicator"
+          }
+        },
+        {
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: "HODL (Updated 2021-01-21)"
+            }
+          ]
         }
       ]
     })
