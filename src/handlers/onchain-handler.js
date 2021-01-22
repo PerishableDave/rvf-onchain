@@ -112,7 +112,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           fields: [
             {
               type: "mrkdwn",
-              text: "HODL (Updated 2021-01-21)"
+              text: "*January 21st, 2021*\nHODL"
             }
           ]
         }
