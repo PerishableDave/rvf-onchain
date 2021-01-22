@@ -1,8 +1,10 @@
 import { exchangeNetFlowVolume, puellMultiple, marketToRealizedValue } from '../lib/glassnode.js'
 import technicalindicators from 'technicalindicators'
 import { trunc } from '../lib/math.js'
+import datefns from 'date-fns'
 
 const { SMA } = technicalindicators
+const { format, fromUnixTime } = datefns
 
 export const exchangeFlow = async ({ ack, client, payload, context }) => {
 
@@ -11,6 +13,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
 
     const data = await exchangeNetFlowVolume()
 
+    const netFlowDate = format(fromUnixTime(data[data.length - 1].t), 'PPP')
     const values = data.map((row) => {return row.v})
     const twentyDaySMA = trunc(SMA.calculate({ period: 20, values: values.slice(values.length - 20, values.length) })[0])
     const fiftyDaySMA = trunc(SMA.calculate({ period: 50, values: values.slice(values.length - 50, values.length) })[0])
@@ -19,11 +22,13 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
 
     const puellData = await puellMultiple()
 
+    const puellDate = format(fromUnixTime(puellData[data.length - 1].t), 'PPP')
     const puellValues = puellData.map((row) => { return row.v })
     const puellTwentyDaySMA = trunc(SMA.calculate({period: 20, values: puellValues.slice(puellValues.length - 20, puellValues.length)})[0])
     const puellToday = trunc(puellValues[puellValues.length - 1])
 
     const mvrvData = await marketToRealizedValue()
+    const mvrvDate = format(fromUnixTime(data[Date.length - 1].t), 'PPP')
     const mvrvValues = mvrvData.map((row) => {return row.v})
     const mvrvTwentyDay = trunc(SMA.calculate({period: 20, values: mvrvValues.slice(mvrvValues.length - 20, mvrvValues.length)})[0])
     const mvrvToday = trunc(mvrvValues[mvrvValues.length - 1])
@@ -44,7 +49,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           fields: [
             {
               type: "mrkdwn",
-              text: `*Today*\n${today}`
+              text: `*${netFlowDate}*\n${today}`
             },{
               type: "mrkdwn",
               text: `*20 SMA*\n${twentyDaySMA}`
@@ -69,7 +74,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           fields: [
             {
               type: "mrkdwn",
-              text: `*Today* (Sell > 4)\n${puellToday}`
+              text: `*${puellDate}* (Sell > 4)\n${puellToday}`
             },{
               type: "mrkdwn",
               text: `*20 SMA*\n${puellTwentyDaySMA}`
@@ -88,7 +93,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           fields: [
             {
               type: "mrkdwn",
-              text: `*Today* (Sell > 6)\n${mvrvToday}`
+              text: `*${mvrvDate}* (Sell > 6)\n${mvrvToday}`
             },{
               type: "mrkdwn",
               text: `*20 SMA*\n${mvrvTwentyDay}`
@@ -99,7 +104,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           type: "header",
           text: {
             type: "plain_text",
-            text: "Sahil Indicator"
+            text: "Sahindicator"
           }
         },
         {
