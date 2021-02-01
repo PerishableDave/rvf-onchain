@@ -21,8 +21,11 @@ export const swaggy = async ({ ack, client, payload, context }) => {
             text: "Swaggy Sentiment"
           },
         }, {
-          type: "mrkdwn",
-          text: tickerMarkdown
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: tickerMarkdown
+          }
         }
       ]
     })
