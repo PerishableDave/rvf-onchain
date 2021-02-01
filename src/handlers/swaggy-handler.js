@@ -6,7 +6,7 @@ export const swaggy = async ({ ack, client, payload, context }) => {
 
     const tickerCounts = await sentiment()
 
-    const tickerMarkdown = '## Top 10\n' + tickerCounts.map((tickerCount, index) => {
+    const tickerMarkdown = '*Top 10*\n' + tickerCounts.map((tickerCount, index) => {
       return `${index + 1}. ${tickerCount.ticker} ${tickerCount.count_ticker}`
     }).join('\n')
 
