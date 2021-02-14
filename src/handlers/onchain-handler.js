@@ -1,4 +1,4 @@
-import { exchangeNetFlowVolume, puellMultiple, marketToRealizedValue } from '../lib/glassnode.js'
+import { exchangeNetFlowVolume, puellMultiple, marketToRealizedValue, netUnrealizedProfitLoss } from '../lib/glassnode.js'
 import technicalindicators from 'technicalindicators'
 import { trunc } from '../lib/math.js'
 import datefns from 'date-fns'
@@ -32,6 +32,13 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
     const mvrvValues = mvrvData.map((row) => {return row.v})
     const mvrvTwentyDay = trunc(SMA.calculate({period: 20, values: mvrvValues.slice(mvrvValues.length - 20, mvrvValues.length)})[0])
     const mvrvToday = trunc(mvrvValues[mvrvValues.length - 1])
+
+    const nuplData = await netUnrealizedProfitLoss()
+    const nuplDate = format(fromUnixTime(nuplData[nuplData.length - 1].t), 'PPP')
+    const nuplValues = nuplData.map((row) => {return row.v})
+    const nuplTwentyDay = trunc(SMA.calculate({period: 20, values: nuplValues.slice(nuplValues.length - 20, nuplValues.length)})[0])
+    const nuplToday = trunc(nuplValues[nuplValues.length - 1])
+
 
     const result = await client.chat.postMessage({
       token: context.botToken,
@@ -104,7 +111,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           type: "header",
           text: {
             type: "plain_text",
-            text: "Sahindicator"
+            text: "NUPL"
           }
         },
         {
@@ -112,7 +119,10 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           fields: [
             {
               type: "mrkdwn",
-              text: "*January 21st, 2021*\nHODL"
+              text: `*${nuplDate}*\n${nuplToday}`
+            },{
+              type: "mrkdwn",
+              text: `*20 SMA*\n${nuplTwentyDay}`
             }
           ]
         }
