@@ -49,7 +49,7 @@ export const netUnrealizedProfitLoss = async () => {
     api_key: process.env.GLASSNODE_API_KEY
   }
 
-  const url = BASE_URL + '/indicators/net_unrealized_profit_loss' + querystring.stringify(params)
+  const url = BASE_URL + '/indicators/net_unrealized_profit_loss?' + querystring.stringify(params)
   const response = await fetch(url)
 
   return response.json()
