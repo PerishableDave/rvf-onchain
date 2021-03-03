@@ -141,7 +141,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           type: "header",
           text: {
             type: "plain_text",
-            text: "RHODL Ratio (Sell > 50k)"
+            text: "RHODL Ratio"
           }
         },
         {
@@ -152,7 +152,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
               text: `*${rhodlDate}*\n${rhodlToday}`
             },{
               type: "mrkdwn",
-              text: `*20 SMA*\n${rhodlTwentyDay}`
+              text: `*20 SMA* (Sell > 50k)\n${rhodlTwentyDay}`
             }
           ]
         },
@@ -160,7 +160,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           type: "header",
           text: {
             type: "plain_text",
-            text: "Reserve Risk (Sell > 0.02)"
+            text: "Reserve Risk"
           }
         },
         {
@@ -168,7 +168,7 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
           fields: [
             {
               type: "mrkdwn",
-              text: `*${reserveRiskDate}*\n${reserveRiskToday}`
+              text: `*${reserveRiskDate}* (Sell > 0.02)\n${reserveRiskToday}`
             },{
               type: "mrkdwn",
               text: `*20 SMA*\n${reserveRiskTwentyDay}`
