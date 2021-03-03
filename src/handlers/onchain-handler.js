@@ -1,4 +1,4 @@
-import { exchangeNetFlowVolume, puellMultiple, marketToRealizedValue, netUnrealizedProfitLoss } from '../lib/glassnode.js'
+import { exchangeNetFlowVolume, puellMultiple, marketToRealizedValue, netUnrealizedProfitLoss, reserveRisk, realizedHodlRatio } from '../lib/glassnode.js'
 import technicalindicators from 'technicalindicators'
 import { trunc } from '../lib/math.js'
 import datefns from 'date-fns'
@@ -39,6 +39,17 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
     const nuplTwentyDay = trunc(SMA.calculate({period: 20, values: nuplValues.slice(nuplValues.length - 20, nuplValues.length)})[0])
     const nuplToday = trunc(nuplValues[nuplValues.length - 1])
 
+    const reserveRiskData = await reserveRisk()
+    const reserveRiskDate = format(fromUnixTime(reserveRiskData[reserveRiskData.length - 1].t), 'PPP')
+    const reserveRiskValues = reserveRiskData.map((row) => {return row.v})
+    const reserveRiskTwentyDay = trunc(SMA.calculate({period: 20, values: reserveRiskValues.slice(reserveRiskValues.length - 20, reserveRiskValues.length)})[0])
+    const reserveRiskToday = trunc(reserveRiskValues[reserveRiskValues.length - 1])
+
+    const rhodlData = await realizedHodlRatio()
+    const rhodlDate = format(fromUnixTime(rhodlData[rhodlData.length - 1].t), 'PPP')
+    const rhodlValues = rhodlData.map((row) => {return row.v})
+    const rhodlTwentyDay = trunc(SMA.calculate({period: 20, values: rhodlValues.slice(rhodlValues.length - 20, rhodlValues.length)})[0])
+    const rhodlToday = trunc(rhodlValues[rhodlValues.length - 1])
 
     const result = await client.chat.postMessage({
       token: context.botToken,
@@ -123,6 +134,44 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
             },{
               type: "mrkdwn",
               text: `*20 SMA*\n${nuplTwentyDay}`
+            }
+          ]
+        },
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: "RHODL Ratio (Sell > 50k)"
+          }
+        },
+        {
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: `*${rhodlDate}*\n${rhodlToday}`
+            },{
+              type: "mrkdwn",
+              text: `*20 SMA*\n${rhodlTwentyDay}`
+            }
+          ]
+        },
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: "Reserve Risk (Sell > 0.02)"
+          }
+        },
+        {
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: `*${reserveRiskDate}*\n${reserveRiskToday}`
+            },{
+              type: "mrkdwn",
+              text: `*20 SMA*\n${reserveRiskTwentyDay}`
             }
           ]
         }

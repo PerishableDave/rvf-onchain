@@ -18,7 +18,7 @@ export const exchangeNetFlowVolume = async (opts = {}) => {
 }
 
 export const puellMultiple = async (opts = {}) => {
-  let params = {
+  const params = {
     a: 'BTC',
     api_key: process.env.GLASSNODE_API_KEY
   }
@@ -31,7 +31,7 @@ export const puellMultiple = async (opts = {}) => {
 
 // MVRV Z-Score
 export const marketToRealizedValue = async () => {
-  let params = {
+  const params = {
     a: 'BTC',
     api_key: process.env.GLASSNODE_API_KEY
   }
@@ -44,12 +44,36 @@ export const marketToRealizedValue = async () => {
 }
 
 export const netUnrealizedProfitLoss = async () => {
-  let params = {
+  const params = {
     a: 'BTC',
     api_key: process.env.GLASSNODE_API_KEY
   }
 
   const url = BASE_URL + '/indicators/net_unrealized_profit_loss?' + querystring.stringify(params)
+  const response = await fetch(url)
+
+  return response.json()
+}
+
+export const reserveRisk = async () => {
+  const params = {
+    a: 'BTC',
+    api_key: process.env.GLASSNODE_API_KEY
+  }
+
+  const url = BASE_URL + '/v1/metrics/indicators/reserve_risk?' + querystring.stringify(params)
+  const response = await fetch(url)
+
+  return response.json()
+}
+
+export const realizedHodlRatio = async () => {
+  const params = {
+    a: 'BTC',
+    api_key: process.env.GLASSNODE_API_KEY
+  }
+
+  const url = BASE_URL + '/v1/metrics/indicators/rhodl_ratio' + querystring.stringify(params)
   const response = await fetch(url)
 
   return response.json()
