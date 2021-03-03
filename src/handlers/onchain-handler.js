@@ -42,8 +42,8 @@ export const exchangeFlow = async ({ ack, client, payload, context }) => {
     const reserveRiskData = await reserveRisk()
     const reserveRiskDate = format(fromUnixTime(reserveRiskData[reserveRiskData.length - 1].t), 'PPP')
     const reserveRiskValues = reserveRiskData.map((row) => {return row.v})
-    const reserveRiskTwentyDay = trunc(SMA.calculate({period: 20, values: reserveRiskValues.slice(reserveRiskValues.length - 20, reserveRiskValues.length)})[0])
-    const reserveRiskToday = trunc(reserveRiskValues[reserveRiskValues.length - 1])
+    const reserveRiskTwentyDay = trunc(SMA.calculate({period: 20, values: reserveRiskValues.slice(reserveRiskValues.length - 20, reserveRiskValues.length)})[0], 4)
+    const reserveRiskToday = trunc(reserveRiskValues[reserveRiskValues.length - 1], 4)
 
     const rhodlData = await realizedHodlRatio()
     const rhodlDate = format(fromUnixTime(rhodlData[rhodlData.length - 1].t), 'PPP')
